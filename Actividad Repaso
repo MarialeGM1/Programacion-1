@@ -1,0 +1,70 @@
+using System;
+
+class Bus
+{
+    public string Nombre { get; set; }
+    public string Ruta { get; set; }
+    public double DistanciaKm { get; set; }
+    public int Capacidad { get; set; }
+    public int Pasajeros { get; set; }
+    public double PrecioPasaje { get; set; }
+
+    public Bus(string nombre, string ruta, double distanciaKm, int capacidad, int pasajeros, double precioPasaje)
+    {
+        Nombre = nombre;
+        Ruta = ruta;
+        DistanciaKm = distanciaKm;
+        Capacidad = capacidad;
+        Pasajeros = pasajeros;
+        PrecioPasaje = precioPasaje;
+    }
+
+    public double CalcularVentas()
+    {
+        return Pasajeros * PrecioPasaje;
+    }
+
+    public int CalcularAsientosDisponibles()
+    {
+        return Capacidad - Pasajeros;
+    }
+
+    public void MostrarInformacion()
+    {
+        Console.WriteLine("Auto Bus " + Nombre);
+        Console.WriteLine("Ruta: " + Ruta);
+        Console.WriteLine("Distancia: " + DistanciaKm + " km");
+        Console.WriteLine("Pasajeros: " + Pasajeros);
+        Console.WriteLine("Ventas: RD$" + CalcularVentas().ToString("N2"));
+        Console.WriteLine("Quedan " + CalcularAsientosDisponibles() + " asientos disponibles");
+        Console.WriteLine();
+    }
+
+    public void MostrarResumenLinea()
+    {
+        Console.WriteLine("Auto Bus " + Nombre + " " + Pasajeros + " Pasajeros Ventas RD$" 
+            + CalcularVentas().ToString("N0") + " quedan " + CalcularAsientosDisponibles() + " asientos disponibles");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Bus bus1 = new Bus("Platinum", "Santo Domingo - Santiago", 155, 22, 5, 1000);
+        Bus bus2 = new Bus("Gold", "Santo Domingo - La Vega", 125, 15, 3, 1333.33);
+        Bus bus3 = new Bus("Silver", "Santo Domingo - San Pedro", 70, 18, 7, 600);
+
+        Console.WriteLine(" REPORTE DE BUSES ");
+        Console.WriteLine();
+
+        bus1.MostrarInformacion();
+        bus2.MostrarInformacion();
+        bus3.MostrarInformacion();
+
+        Console.WriteLine(" RESUMEN FINAL ");
+        bus1.MostrarResumenLinea();
+        bus2.MostrarResumenLinea();
+        bus3.MostrarResumenLinea();
+    }
+}
