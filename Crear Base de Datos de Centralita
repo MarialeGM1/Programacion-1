@@ -1,0 +1,30 @@
+CREATE DATABASE IF NOT EXISTS centralita_db;
+USE centralita_db;
+
+DROP TABLE IF EXISTS llamadas;
+
+CREATE TABLE llamadas (
+    id_llamada INT AUTO_INCREMENT PRIMARY KEY,
+    numero_origen VARCHAR(15) NOT NULL,
+    numero_destino VARCHAR(15) NOT NULL,
+    duracion INT NOT NULL,
+    costo_llamada DECIMAL(10,2) NOT NULL,
+    tipo_llamada VARCHAR(20) NOT NULL,
+    observacion VARCHAR(100),
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO llamadas (numero_origen, numero_destino, duracion, costo_llamada, tipo_llamada, observacion)
+VALUES 
+('8091234567', '8295551111', 45, 6.75, 'Local', 'Llamada corta'),
+('8092223333', '8497778888', 120, 24.00, 'Provincial', 'Franja 1'),
+('8294449999', '8091212121', 80, 20.00, 'Provincial', 'Franja 2'),
+('8491110000', '8093435656', 60, 18.00, 'Provincial', 'Franja 3'),
+('8098887777', '8299091010', 30, 4.50, 'Local', 'Llamada rápida');
+
+SELECT * FROM llamadas;
+
+SELECT 
+    COUNT(*) AS total_llamadas,
+    SUM(costo_llamada) AS total_facturado
+FROM llamadas;
