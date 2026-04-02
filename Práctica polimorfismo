@@ -1,0 +1,125 @@
+using System;
+using System.Collections.Generic;
+
+public class Ave
+{
+    public string Nombre { get; set; }
+    public string Habitat { get; set; }
+    public int Edad { get; set; }
+
+    public Ave(string nombre, string habitat, int edad)
+    {
+        Nombre = nombre;
+        Habitat = habitat;
+        Edad = edad;
+    }
+
+    public virtual void Moverse()
+    {
+        Console.WriteLine($"{Nombre} se mueve como un ave común.");
+    }
+
+    public virtual void HacerSonido()
+    {
+        Console.WriteLine($"{Nombre} hace un sonido genérico.");
+    }
+
+    public virtual void Alimentarse()
+    {
+        Console.WriteLine($"{Nombre} se está alimentando.");
+    }
+
+    public void MostrarDatos()
+    {
+        Console.WriteLine("Nombre: " + Nombre);
+        Console.WriteLine("Hábitat: " + Habitat);
+        Console.WriteLine("Edad: " + Edad + " años");
+    }
+}
+
+public class Gallina : Ave
+{
+    public Gallina(string nombre, string habitat, int edad) : base(nombre, habitat, edad)
+    {
+    }
+
+    public override void Moverse()
+    {
+        Console.WriteLine($"{Nombre} camina y corre por el corral.");
+    }
+
+    public override void HacerSonido()
+    {
+        Console.WriteLine($"{Nombre} dice: clo clo clo.");
+    }
+
+    public override void Alimentarse()
+    {
+        Console.WriteLine($"{Nombre} come maíz y granos.");
+    }
+}
+
+public class Canario : Ave
+{
+    public Canario(string nombre, string habitat, int edad) : base(nombre, habitat, edad)
+    {
+    }
+
+    public override void Moverse()
+    {
+        Console.WriteLine($"{Nombre} vuela de una rama a otra.");
+    }
+
+    public override void HacerSonido()
+    {
+        Console.WriteLine($"{Nombre} canta suavemente.");
+    }
+
+    public override void Alimentarse()
+    {
+        Console.WriteLine($"{Nombre} come semillas pequeñas.");
+    }
+}
+
+public class Pato : Ave
+{
+    public Pato(string nombre, string habitat, int edad) : base(nombre, habitat, edad)
+    {
+    }
+
+    public override void Moverse()
+    {
+        Console.WriteLine($"{Nombre} camina y también nada en el agua.");
+    }
+
+    public override void HacerSonido()
+    {
+        Console.WriteLine($"{Nombre} dice: cuac cuac.");
+    }
+
+    public override void Alimentarse()
+    {
+        Console.WriteLine($"{Nombre} come plantas e insectos.");
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        List<Ave> aves = new List<Ave>();
+
+        aves.Add(new Gallina("Gallina Roja", "Granja", 2));
+        aves.Add(new Canario("Canario Amarillo", "Bosque", 1));
+        aves.Add(new Pato("Pato Criollo", "Lago", 3));
+
+        foreach (Ave ave in aves)
+        {
+            ave.MostrarDatos();
+            ave.Moverse();
+            ave.HacerSonido();
+            ave.Alimentarse();
+            Console.WriteLine();
+        }
+    }
+}
