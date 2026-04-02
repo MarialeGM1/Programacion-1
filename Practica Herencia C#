@@ -1,0 +1,212 @@
+using System;
+
+class Hamburguesa
+{
+    protected string nombre;
+    protected string tipoPan;
+    protected string carne;
+    protected double precioBase;
+
+    protected string adicional1;
+    protected double precioAdicional1;
+
+    protected string adicional2;
+    protected double precioAdicional2;
+
+    protected string adicional3;
+    protected double precioAdicional3;
+
+    protected string adicional4;
+    protected double precioAdicional4;
+
+    public Hamburguesa(string nombre, string tipoPan, string carne, double precioBase)
+    {
+        this.nombre = nombre;
+        this.tipoPan = tipoPan;
+        this.carne = carne;
+        this.precioBase = precioBase;
+    }
+
+    public virtual void AgregarAdicional1(string nombre, double precio)
+    {
+        adicional1 = nombre;
+        precioAdicional1 = precio;
+    }
+
+    public virtual void AgregarAdicional2(string nombre, double precio)
+    {
+        adicional2 = nombre;
+        precioAdicional2 = precio;
+    }
+
+    public virtual void AgregarAdicional3(string nombre, double precio)
+    {
+        adicional3 = nombre;
+        precioAdicional3 = precio;
+    }
+
+    public virtual void AgregarAdicional4(string nombre, double precio)
+    {
+        adicional4 = nombre;
+        precioAdicional4 = precio;
+    }
+
+    public virtual double ItemizarHamburguesa()
+    {
+        double total = precioBase;
+
+        Console.WriteLine("Hamburguesa: " + nombre);
+        Console.WriteLine("Pan: " + tipoPan);
+        Console.WriteLine("Carne: " + carne);
+        Console.WriteLine("Precio base: RD$" + precioBase.ToString("F2"));
+
+        if (adicional1 != null)
+        {
+            Console.WriteLine("Adicional agregado: " + adicional1 + " - RD$" + precioAdicional1.ToString("F2"));
+            total += precioAdicional1;
+        }
+
+        if (adicional2 != null)
+        {
+            Console.WriteLine("Adicional agregado: " + adicional2 + " - RD$" + precioAdicional2.ToString("F2"));
+            total += precioAdicional2;
+        }
+
+        if (adicional3 != null)
+        {
+            Console.WriteLine("Adicional agregado: " + adicional3 + " - RD$" + precioAdicional3.ToString("F2"));
+            total += precioAdicional3;
+        }
+
+        if (adicional4 != null)
+        {
+            Console.WriteLine("Adicional agregado: " + adicional4 + " - RD$" + precioAdicional4.ToString("F2"));
+            total += precioAdicional4;
+        }
+
+        Console.WriteLine("Total de la hamburguesa: RD$" + total.ToString("F2"));
+        return total;
+    }
+}
+
+class HamburguesaSaludable : Hamburguesa
+{
+    private string adicionalSaludable1;
+    private double precioAdicionalSaludable1;
+
+    private string adicionalSaludable2;
+    private double precioAdicionalSaludable2;
+
+    public HamburguesaSaludable(string carne, double precioBase)
+        : base("Hamburguesa Saludable", "Pan Integral", carne, precioBase)
+    {
+    }
+
+    public void AgregarAdicionalSaludable1(string nombre, double precio)
+    {
+        adicionalSaludable1 = nombre;
+        precioAdicionalSaludable1 = precio;
+    }
+
+    public void AgregarAdicionalSaludable2(string nombre, double precio)
+    {
+        adicionalSaludable2 = nombre;
+        precioAdicionalSaludable2 = precio;
+    }
+
+    public override double ItemizarHamburguesa()
+    {
+        double total = base.ItemizarHamburguesa();
+
+        if (adicionalSaludable1 != null)
+        {
+            Console.WriteLine("Adicional saludable: " + adicionalSaludable1 + " - RD$" + precioAdicionalSaludable1.ToString("F2"));
+            total += precioAdicionalSaludable1;
+        }
+
+        if (adicionalSaludable2 != null)
+        {
+            Console.WriteLine("Adicional saludable: " + adicionalSaludable2 + " - RD$" + precioAdicionalSaludable2.ToString("F2"));
+            total += precioAdicionalSaludable2;
+        }
+
+        Console.WriteLine("Total de la hamburguesa saludable: RD$" + total.ToString("F2"));
+        return total;
+    }
+}
+
+class HamburguesaPremium : Hamburguesa
+{
+    public HamburguesaPremium()
+        : base("Hamburguesa Premium", "Pan Brioche", "Carne Premium", 850)
+    {
+        adicional1 = "Papitas";
+        precioAdicional1 = 150;
+        adicional2 = "Bebida";
+        precioAdicional2 = 100;
+    }
+
+    public override void AgregarAdicional1(string nombre, double precio)
+    {
+        Console.WriteLine("No se pueden agregar ingredientes extra a la hamburguesa premium.");
+    }
+
+    public override void AgregarAdicional2(string nombre, double precio)
+    {
+        Console.WriteLine("No se pueden agregar ingredientes extra a la hamburguesa premium.");
+    }
+
+    public override void AgregarAdicional3(string nombre, double precio)
+    {
+        Console.WriteLine("No se pueden agregar ingredientes extra a la hamburguesa premium.");
+    }
+
+    public override void AgregarAdicional4(string nombre, double precio)
+    {
+        Console.WriteLine("No se pueden agregar ingredientes extra a la hamburguesa premium.");
+    }
+
+    public override double ItemizarHamburguesa()
+    {
+        Console.WriteLine("Hamburguesa: " + nombre);
+        Console.WriteLine("Pan: " + tipoPan);
+        Console.WriteLine("Carne: " + carne);
+        Console.WriteLine("Precio base: RD$" + precioBase.ToString("F2"));
+        Console.WriteLine("Incluye: " + adicional1 + " - RD$" + precioAdicional1.ToString("F2"));
+        Console.WriteLine("Incluye: " + adicional2 + " - RD$" + precioAdicional2.ToString("F2"));
+
+        double total = precioBase + precioAdicional1 + precioAdicional2;
+        Console.WriteLine("Total de la hamburguesa premium: RD$" + total.ToString("F2"));
+        return total;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine(" HAMBURGUESA CLASICA ");
+        Hamburguesa hamburguesa = new Hamburguesa("Hamburguesa Clasica", "Pan Normal", "Carne de Res", 500);
+        hamburguesa.AgregarAdicional1("Lechuga", 25);
+        hamburguesa.AgregarAdicional2("Tomate", 30);
+        hamburguesa.AgregarAdicional3("Bacon", 90);
+        hamburguesa.ItemizarHamburguesa();
+
+        Console.WriteLine();
+        Console.WriteLine(" HAMBURGUESA SALUDABLE ");
+        HamburguesaSaludable saludable = new HamburguesaSaludable("Carne de Pavo", 650);
+        saludable.AgregarAdicional1("Pepino", 20);
+        saludable.AgregarAdicional2("Tomate", 30);
+        saludable.AgregarAdicional3("Lechuga", 25);
+        saludable.AgregarAdicional4("Cebolla", 20);
+        saludable.AgregarAdicionalSaludable1("Aguacate", 80);
+        saludable.AgregarAdicionalSaludable2("Queso Light", 70);
+        saludable.ItemizarHamburguesa();
+
+        Console.WriteLine();
+        Console.WriteLine(" HAMBURGUESA PREMIUM ");
+        HamburguesaPremium premium = new HamburguesaPremium();
+        premium.AgregarAdicional1("Huevo", 40);
+        premium.ItemizarHamburguesa();
+    }
+}
