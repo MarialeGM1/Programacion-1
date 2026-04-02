@@ -1,0 +1,160 @@
+using System;
+using System.Collections.Generic;
+
+abstract class Llamada
+{
+    private string origen;
+    private string destino;
+    private int duracion;
+
+    public string Origen
+    {
+        get { return origen; }
+        set { origen = value; }
+    }
+
+    public string Destino
+    {
+        get { return destino; }
+        set { destino = value; }
+    }
+
+    public int Duracion
+    {
+        get { return duracion; }
+        set { duracion = value; }
+    }
+
+    public Llamada(string origen, string destino, int duracion)
+    {
+        this.origen = origen;
+        this.destino = destino;
+        this.duracion = duracion;
+    }
+
+    public abstract double CalcularCosto();
+
+    public virtual string MostrarDetalle()
+    {
+        return "Origen: " + origen + " | Destino: " + destino + " | Duración: " + duracion + " segundos";
+    }
+}
+
+class LlamadaLocal : Llamada
+{
+    public LlamadaLocal(string origen, string destino, int duracion)
+        : base(origen, destino, duracion)
+    {
+    }
+
+    public override double CalcularCosto()
+    {
+        return Duracion * 0.15;
+    }
+
+    public override string MostrarDetalle()
+    {
+        return "Llamada Local -> " + base.MostrarDetalle() + " | Costo: RD$" + CalcularCosto().ToString("F2");
+    }
+}
+
+class LlamadaProvincial : Llamada
+{
+    private int franjaHoraria;
+
+    public int FranjaHoraria
+    {
+        get { return franjaHoraria; }
+        set { franjaHoraria = value; }
+    }
+
+    public LlamadaProvincial(string origen, string destino, int duracion, int franjaHoraria)
+        : base(origen, destino, duracion)
+    {
+        this.franjaHoraria = franjaHoraria;
+    }
+
+    public override double CalcularCosto()
+    {
+        double precioPorSegundo = 0;
+
+        if (franjaHoraria == 1)
+        {
+            precioPorSegundo = 0.20;
+        }
+        else if (franjaHoraria == 2)
+        {
+            precioPorSegundo = 0.25;
+        }
+        else if (franjaHoraria == 3)
+        {
+            precioPorSegundo = 0.30;
+        }
+
+        return Duracion * precioPorSegundo;
+    }
+
+    public override string MostrarDetalle()
+    {
+        return "Llamada Provincial -> " + base.MostrarDetalle() +
+               " | Franja: " + franjaHoraria +
+               " | Costo: RD$" + CalcularCosto().ToString("F2");
+    }
+}
+
+class Centralita
+{
+    private List<Llamada> listaLlamadas;
+
+    public Centralita()
+    {
+        listaLlamadas = new List<Llamada>();
+    }
+
+    public void RegistrarLlamada(Llamada llamada)
+    {
+        listaLlamadas.Add(llamada);
+        Console.WriteLine(llamada.MostrarDetalle());
+    }
+
+    public int ObtenerTotalLlamadas()
+    {
+        return listaLlamadas.Count;
+    }
+
+    public double ObtenerFacturacionTotal()
+    {
+        double total = 0;
+
+        foreach (Llamada llamada in listaLlamadas)
+        {
+            total += llamada.CalcularCosto();
+        }
+
+        return total;
+    }
+
+    public void MostrarInformeFinal()
+    {
+        Console.WriteLine();
+        Console.WriteLine(" REPORTE FINAL ");
+        Console.WriteLine("Cantidad total de llamadas: " + ObtenerTotalLlamadas());
+        Console.WriteLine("Facturación total: RD$" + ObtenerFacturacionTotal().ToString("F2"));
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Centralita centralita = new Centralita();
+
+        centralita.RegistrarLlamada(new LlamadaLocal("809-123-4567", "829-555-1111", 40));
+        centralita.RegistrarLlamada(new LlamadaProvincial("809-222-3333", "849-777-8888", 70, 1));
+        centralita.RegistrarLlamada(new LlamadaLocal("829-444-9999", "809-121-2121", 25));
+        centralita.RegistrarLlamada(new LlamadaProvincial("849-111-0000", "809-343-5656", 90, 2));
+        centralita.RegistrarLlamada(new LlamadaProvincial("809-888-7777", "829-909-1010", 55, 3));
+
+        centralita.MostrarInformeFinal();
+    }
+}
