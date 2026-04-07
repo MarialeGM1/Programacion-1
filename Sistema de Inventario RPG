@@ -1,0 +1,317 @@
+using System;
+using System.Collections.Generic;
+
+namespace SistemaInventarioRPG
+{
+    // Clase base para cualquier objeto del inventario
+    public class Item
+    {
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public double Weight { get; private set; }
+        public int Value { get; private set; }
+
+        public Item(int id, string name, string description, double weight, int value)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            Weight = weight;
+            Value = value;
+        }
+
+        public virtual void ShowInfo()
+        {
+            Console.WriteLine($"ID: {Id}");
+            Console.WriteLine($"Nombre: {Name}");
+            Console.WriteLine($"Descripción: {Description}");
+            Console.WriteLine($"Peso: {Weight}");
+            Console.WriteLine($"Valor: {Value} monedas");
+        }
+
+        public virtual void Use(Character character)
+        {
+            Console.WriteLine($"{Name} no se puede usar directamente.");
+        }
+    }
+
+    // Clase hija para armas
+    public class Weapon : Item
+    {
+        public int Damage { get; private set; }
+        public string WeaponType { get; private set; }
+
+        public Weapon(int id, string name, string description, double weight, int value, int damage, string weaponType)
+            : base(id, name, description, weight, value)
+        {
+            Damage = damage;
+            WeaponType = weaponType;
+        }
+
+        public override void ShowInfo()
+        {
+            base.ShowInfo();
+            Console.WriteLine($"Tipo de arma: {WeaponType}");
+            Console.WriteLine($"Daño: {Damage}");
+        }
+
+        public override void Use(Character character)
+        {
+            character.EquipWeapon(this);
+        }
+    }
+
+    // Clase hija para armaduras
+    public class Armor : Item
+    {
+        public int Defense { get; private set; }
+        public string ArmorType { get; private set; }
+
+        public Armor(int id, string name, string description, double weight, int value, int defense, string armorType)
+            : base(id, name, description, weight, value)
+        {
+            Defense = defense;
+            ArmorType = armorType;
+        }
+
+        public override void ShowInfo()
+        {
+            base.ShowInfo();
+            Console.WriteLine($"Tipo de armadura: {ArmorType}");
+            Console.WriteLine($"Defensa: {Defense}");
+        }
+
+        public override void Use(Character character)
+        {
+            character.EquipArmor(this);
+        }
+    }
+
+    // Clase hija para pociones
+    public class Potion : Item
+    {
+        public int HealAmount { get; private set; }
+
+        public Potion(int id, string name, string description, double weight, int value, int healAmount)
+            : base(id, name, description, weight, value)
+        {
+            HealAmount = healAmount;
+        }
+
+        public override void ShowInfo()
+        {
+            base.ShowInfo();
+            Console.WriteLine($"Curación: {HealAmount}");
+        }
+
+        public override void Use(Character character)
+        {
+            character.Heal(HealAmount);
+            Console.WriteLine($"{character.Name} usó {Name} y recuperó {HealAmount} puntos de vida.");
+        }
+    }
+
+    // Clase inventario
+    public class Inventory
+    {
+        private List<Item> items;
+
+        public Inventory()
+        {
+            items = new List<Item>();
+        }
+
+        public void AddItem(Item item)
+        {
+            items.Add(item);
+            Console.WriteLine($"{item.Name} fue agregado al inventario.");
+        }
+
+        public bool RemoveItem(int id)
+        {
+            Item item = GetItemById(id);
+            if (item != null)
+            {
+                items.Remove(item);
+                Console.WriteLine($"{item.Name} fue eliminado del inventario.");
+                return true;
+            }
+
+            Console.WriteLine("No se encontró un objeto con ese ID.");
+            return false;
+        }
+
+        public Item GetItemById(int id)
+        {
+            foreach (Item item in items)
+            {
+                if (item.Id == id)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        public void ShowItems()
+        {
+            if (items.Count == 0)
+            {
+                Console.WriteLine("El inventario está vacío.");
+                return;
+            }
+
+            Console.WriteLine("\n=== INVENTARIO ===");
+            foreach (Item item in items)
+            {
+                Console.WriteLine("---------------------------");
+                item.ShowInfo();
+            }
+        }
+
+        public List<Item> GetAllItems()
+        {
+            return items;
+        }
+    }
+
+    // Clase personaje
+    public class Character
+    {
+        public string Name { get; private set; }
+        public int Health { get; private set; }
+        public int MaxHealth { get; private set; }
+        public Weapon EquippedWeapon { get; private set; }
+        public Armor EquippedArmor { get; private set; }
+        public Inventory Inventory { get; private set; }
+
+        public Character(string name, int maxHealth)
+        {
+            Name = name;
+            MaxHealth = maxHealth;
+            Health = maxHealth;
+            Inventory = new Inventory();
+        }
+
+        public void Heal(int amount)
+        {
+            Health += amount;
+            if (Health > MaxHealth)
+            {
+                Health = MaxHealth;
+            }
+        }
+
+        public void EquipWeapon(Weapon weapon)
+        {
+            EquippedWeapon = weapon;
+            Console.WriteLine($"{Name} equipó el arma: {weapon.Name}");
+        }
+
+        public void EquipArmor(Armor armor)
+        {
+            EquippedArmor = armor;
+            Console.WriteLine($"{Name} equipó la armadura: {armor.Name}");
+        }
+
+        public void ShowStatus()
+        {
+            Console.WriteLine("\n=== ESTADO DEL PERSONAJE ===");
+            Console.WriteLine($"Nombre: {Name}");
+            Console.WriteLine($"Vida: {Health}/{MaxHealth}");
+            Console.WriteLine($"Arma equipada: {(EquippedWeapon != null ? EquippedWeapon.Name : "Ninguna")}");
+            Console.WriteLine($"Armadura equipada: {(EquippedArmor != null ? EquippedArmor.Name : "Ninguna")}");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Character player = new Character("Aldric", 100);
+
+            player.Inventory.AddItem(new Weapon(1, "Espada de Hierro", "Una espada básica para combate cercano.", 4.5, 100, 15, "Espada"));
+            player.Inventory.AddItem(new Armor(2, "Armadura de Cuero", "Protección ligera para aventureros.", 6.0, 80, 10, "Ligera"));
+            player.Inventory.AddItem(new Potion(3, "Poción de Vida", "Recupera salud del personaje.", 0.5, 25, 30));
+            player.Inventory.AddItem(new Potion(4, "Poción Grande", "Restaura una mayor cantidad de vida.", 0.8, 50, 50));
+
+            bool exit = false;
+
+            while (!exit)
+            {
+                Console.WriteLine("\n===== SISTEMA DE INVENTARIO RPG =====");
+                Console.WriteLine("1. Ver estado del personaje");
+                Console.WriteLine("2. Ver inventario");
+                Console.WriteLine("3. Usar/equipar objeto por ID");
+                Console.WriteLine("4. Eliminar objeto por ID");
+                Console.WriteLine("5. Agregar objeto de prueba");
+                Console.WriteLine("6. Salir");
+                Console.Write("Seleccione una opción: ");
+
+                string option = Console.ReadLine();
+
+                switch (option)
+                {
+                    case "1":
+                        player.ShowStatus();
+                        break;
+
+                    case "2":
+                        player.Inventory.ShowItems();
+                        break;
+
+                    case "3":
+                        Console.Write("Ingrese el ID del objeto que desea usar/equipar: ");
+                        if (int.TryParse(Console.ReadLine(), out int useId))
+                        {
+                            Item item = player.Inventory.GetItemById(useId);
+                            if (item != null)
+                            {
+                                item.Use(player);
+
+                                if (item is Potion)
+                                {
+                                    player.Inventory.RemoveItem(useId);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Objeto no encontrado.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("ID inválido.");
+                        }
+                        break;
+
+                    case "4":
+                        Console.Write("Ingrese el ID del objeto que desea eliminar: ");
+                        if (int.TryParse(Console.ReadLine(), out int removeId))
+                        {
+                            player.Inventory.RemoveItem(removeId);
+                        }
+                        else
+                        {
+                            Console.WriteLine("ID inválido.");
+                        }
+                        break;
+
+                    case "5":
+                        player.Inventory.AddItem(new Weapon(5, "Hacha de Batalla", "Arma pesada de gran daño.", 7.5, 150, 25, "Hacha"));
+                        break;
+
+                    case "6":
+                        exit = true;
+                        Console.WriteLine("Saliendo del sistema...");
+                        break;
+
+                    default:
+                        Console.WriteLine("Opción no válida.");
+                        break;
+                }
+            }
+        }
+    }
+}
