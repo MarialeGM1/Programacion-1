@@ -1,0 +1,198 @@
+import { useState } from "react";
+import "./App.css";
+
+function App() {
+  const [comentario, setComentario] = useState("");
+  const [carrera, setCarrera] = useState("");
+  const [turno, setTurno] = useState("");
+
+  const limpiarFormulario = () => {
+    setComentario("");
+    setCarrera("");
+    setTurno("");
+  };
+
+  return (
+    <div className="contenedor">
+      <h1>Formulario Semana 10</h1>
+      <p>Aplicación React con textarea, select y grupo de radio usando useState.</p>
+
+      <form className="formulario">
+        <div className="campo">
+          <label htmlFor="comentario">Comentario:</label>
+          <textarea
+            id="comentario"
+            value={comentario}
+            onChange={(e) => setComentario(e.target.value)}
+            placeholder="Escribe tu comentario aquí..."
+            rows="5"
+          ></textarea>
+        </div>
+
+        <div className="campo">
+          <label htmlFor="carrera">Selecciona tu carrera:</label>
+          <select
+            id="carrera"
+            value={carrera}
+            onChange={(e) => setCarrera(e.target.value)}
+          >
+            <option value="">-- Selecciona una opción --</option>
+            <option value="Ingeniería en Tecnologías Computacionales">
+              Ingeniería en Tecnologías Computacionales
+            </option>
+            <option value="Software">Software</option>
+            <option value="Redes">Redes</option>
+            <option value="Ciberseguridad">Ciberseguridad</option>
+          </select>
+        </div>
+
+        <div className="campo">
+          <label>Selecciona tu turno:</label>
+
+          <div className="opcion-radio">
+            <input
+              type="radio"
+              id="manana"
+              name="turno"
+              value="Mañana"
+              checked={turno === "Mañana"}
+              onChange={(e) => setTurno(e.target.value)}
+            />
+            <label htmlFor="manana">Mañana</label>
+          </div>
+
+          <div className="opcion-radio">
+            <input
+              type="radio"
+              id="tarde"
+              name="turno"
+              value="Tarde"
+              checked={turno === "Tarde"}
+              onChange={(e) => setTurno(e.target.value)}
+            />
+            <label htmlFor="tarde">Tarde</label>
+          </div>
+
+          <div className="opcion-radio">
+            <input
+              type="radio"
+              id="noche"
+              name="turno"
+              value="Noche"
+              checked={turno === "Noche"}
+              onChange={(e) => setTurno(e.target.value)}
+            />
+            <label htmlFor="noche">Noche</label>
+          </div>
+        </div>
+
+        <button type="button" onClick={limpiarFormulario}>
+          Limpiar formulario
+        </button>
+      </form>
+
+      <div className="resultado">
+        <h2>Datos ingresados</h2>
+        <p>
+          <strong>Comentario:</strong>{" "}
+          {comentario || "No se ha escrito ningún comentario"}
+        </p>
+        <p>
+          <strong>Carrera:</strong>{" "}
+          {carrera || "No se ha seleccionado ninguna carrera"}
+        </p>
+        <p>
+          <strong>Turno:</strong>{" "}
+          {turno || "No se ha seleccionado ningún turno"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+
+//CSS
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+}
+
+.contenedor {
+  max-width: 700px;
+  margin: 40px auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+h1 {
+  text-align: center;
+  color: #222;
+}
+
+p {
+  color: #333;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+label {
+  font-weight: bold;
+}
+
+textarea,
+select {
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.opcion-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.opcion-radio label {
+  font-weight: normal;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  background-color: #2563eb;
+  color: white;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1d4ed8;
+}
+
+.resultado {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #eef2ff;
+  border-radius: 10px;
+}
